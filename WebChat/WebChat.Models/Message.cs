@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebChat.Models
@@ -17,6 +18,9 @@ namespace WebChat.Models
         public string MessageString { get; set; }
 
         [Required]
+        public DateTime SentOn { get; set; }
+
+        [Required]
         public string SenderId { get; set; }
 
         public virtual ApplicationUser Sender { get; set; }
@@ -25,6 +29,7 @@ namespace WebChat.Models
         public string ReceiverId { get; set; }
 
         public virtual ApplicationUser Receiver { get; set; }
+
         public ICollection<Notification> Notifications { get; set; }
     }
 }
