@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.SqlServer.Server;
 using WebChat.Models;
 using WebChat.Services.Models.BindingModels;
+using WebChat.Services.Models.ViewModels;
 
 namespace WebChat.Services.Controllers
 {
@@ -31,14 +32,19 @@ namespace WebChat.Services.Controllers
             var messages = Data.Messages
                 .Where(m => m.Sender.Id == friendId && m.Receiver.Id == userId)
                 .OrderBy(m => m.SentOn)
-                .Select(m => new
+                .Select(m => new MessageViewModel
                 {
-                    Sender = m.Sender.UserName,
+                    SenderId = m.SenderId,
                     Message = m.MessageString,
-                    Receiver = m.Receiver.UserName
+                    SentOn = m.SentOn
                 });
 
-            //TODO: Remove all notifications for the current converation.
+           var notification = this.Data.Notifications
+                .First(n => n.SenderId == userId && n.ReceiverId == friendId);
+
+            notification.Amount = 0;
+
+            this.Data.SaveChanges();
 
             return Ok(messages);
         }
@@ -60,6 +66,15 @@ namespace WebChat.Services.Controllers
             if (message.Message.Length == 0)
                 return this.BadRequest("Message cannot be empty!");
 
+            if (!this.Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
+            {
+                this.Data.Notifications.Add(new Notification
+                {
+                    SenderId = userId,
+                    ReceiverId = friendId,
+                    Amount = 0
+                });
+            }
 
             this.Data.Messages.Add(new Message
             {
@@ -69,8 +84,10 @@ namespace WebChat.Services.Controllers
                 ReceiverId = friendId
             });
 
-            //TODO: Add notification.
+            var notification = this.Data.Notifications
+                .First(n => n.SenderId == userId && n.ReceiverId == friendId);
 
+            notification.Amount++;
 
             this.Data.SaveChanges();
 
@@ -90,8 +107,17 @@ namespace WebChat.Services.Controllers
             if (!ModelState.IsValid)
                 return this.BadRequest(ModelState);
 
-            string imageBase64 = "";
+            if (!this.Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
+            {
+                this.Data.Notifications.Add(new Notification
+                {
+                    SenderId = userId,
+                    ReceiverId = friendId,
+                    Amount = 0
+                });
+            }
 
+            string imageBase64 = "";
            
             using (MemoryStream m = new MemoryStream())
             {
@@ -110,8 +136,10 @@ namespace WebChat.Services.Controllers
                 ReceiverId = friendId
             });
 
-            //TODO: Add notification.
+            var notification = this.Data.Notifications
+                .First(n => n.SenderId == userId && n.ReceiverId == friendId);
 
+            notification.Amount++;
 
             this.Data.SaveChanges();
 

@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
+using WebChat.Models;
+using WebChat.Services.Models.BindingModels;
 using WebChat.Services.Models.ViewModels;
 
 namespace WebChat.Services.Controllers
@@ -36,7 +38,7 @@ namespace WebChat.Services.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            if (!this.Data.Notifications.Any(n => n.ReceiverId == userId))
+            if (!this.Data.Notifications.Any(n => n.ReceiverId == userId && n.SenderId == friendId))
                 return this.Ok("No new notifications.");
 
             var notifications = this.Data.Notifications
@@ -49,5 +51,6 @@ namespace WebChat.Services.Controllers
 
             return this.Ok(notifications);
         }
+
     }
 }
