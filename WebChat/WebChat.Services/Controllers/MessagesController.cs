@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.SqlServer.Server;
@@ -57,10 +60,11 @@ namespace WebChat.Services.Controllers
             if (message.Message.Length == 0)
                 return this.BadRequest("Message cannot be empty!");
 
+
             this.Data.Messages.Add(new Message
             {
                 MessageString = message.Message,
-                SentOn = message.SentOn,
+                SentOn = DateTime.Now,
                 SenderId = userId,
                 ReceiverId = friendId
             });
@@ -72,5 +76,48 @@ namespace WebChat.Services.Controllers
 
             return this.Ok("Message sent successfully.");
         }
+
+        //POST /api/messages/{friendId}/image
+        [HttpPost]
+        [Route("api/messages/{friendId}/image")]
+        public IHttpActionResult PostImage(string friendId, Image img)
+        {
+            var userId = User.Identity.GetUserId();
+
+            if (friendId == userId)
+                return this.BadRequest("You canot send images to yourself!");
+
+            if (!ModelState.IsValid)
+                return this.BadRequest(ModelState);
+
+            string imageBase64 = "";
+
+           
+            using (MemoryStream m = new MemoryStream())
+            {
+                img.Save(m, img.RawFormat);
+                byte[] imageBytes = m.ToArray();
+
+                // Convert byte[] to Base64 String
+                imageBase64 = Convert.ToBase64String(imageBytes);
+            }
+            
+            this.Data.Messages.Add(new Message
+            {
+                MessageString = imageBase64,
+                SentOn = DateTime.Now,
+                SenderId = userId,
+                ReceiverId = friendId
+            });
+
+            //TODO: Add notification.
+
+
+            this.Data.SaveChanges();
+
+            return this.Ok("Image sent successfully.");
+
+        }
+
     }
 }
