@@ -1,0 +1,3 @@
+C:\Users\Villy\Documents\GitHub\WebChat\WebChat\WebChat.Services\WebChatUploads\Apress.Recipes.WebApi\bin\Debug\Apress.Recipes.WebApi.exe.config
+C:\Users\Villy\Documents\GitHub\WebChat\WebChat\WebChat.Services\WebChatUploads\Apress.Recipes.WebApi\obj\Debug\Apress.Recipes.WebApi.exe
+C:\Users\Villy\Documents\GitHub\WebChat\WebChat\WebChat.Services\WebChatUploads\Apress.Recipes.WebApi\obj\Debug\Apress.Recipes.WebApi.pdb
