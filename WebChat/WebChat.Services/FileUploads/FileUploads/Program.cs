@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using Microsoft.Owin.Hosting;
 
-namespace WebChatUploads
+namespace FileUploads
 {
     class Program
     {

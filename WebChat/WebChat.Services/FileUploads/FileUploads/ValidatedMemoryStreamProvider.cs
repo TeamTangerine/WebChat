@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace WebChatUploads
+namespace FileUploads
 {
     public class ValidatedMemoryStreamProvider : MultipartMemoryStreamProvider
     {

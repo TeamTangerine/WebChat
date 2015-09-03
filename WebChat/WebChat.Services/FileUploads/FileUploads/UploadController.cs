@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace WebChatUploads
+namespace FileUploads
 {
     public class UploadController : ApiController
     {

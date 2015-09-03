@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Owin;
 
-namespace WebChatUploads
+namespace FileUploads
 {
     public class Startup
     {
