@@ -43,7 +43,7 @@ namespace WebChat.Services.Controllers
             private set { _userManager = value; }
         }
 
-        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; }
+        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; }//set??
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
