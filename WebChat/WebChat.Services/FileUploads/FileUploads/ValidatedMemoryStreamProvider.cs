@@ -8,7 +8,8 @@ namespace FileUploads
 {
     public class ValidatedMemoryStreamProvider : MultipartMemoryStreamProvider
     {
-        private static readonly string[] Extensions = { "txt", "log" };
+        //If the Extension of the uploaded file doesn’t match the user requirement, just simply nullify the stream.
+        private static readonly string[] Extensions = { "txt", "log" }; //or other formats 'png', 'jpg', etc.
 
         public override Stream GetStream(HttpContent parent, HttpContentHeaders headers)
         {
