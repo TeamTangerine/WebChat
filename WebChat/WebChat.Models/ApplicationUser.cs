@@ -1,19 +1,18 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-
-namespace WebChat.Models
+﻿namespace WebChat.Models
 {
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
     public class ApplicationUser : IdentityUser
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(
-            UserManager<ApplicationUser> manager,
+            UserManager<ApplicationUser> manager, 
             string authenticationType)
         {
-            var userIdentity = await manager.CreateIdentityAsync(
-                this,
-                authenticationType);
+            var userIdentity = await manager.CreateIdentityAsync(this, authenticationType);
 
             return userIdentity;
         }

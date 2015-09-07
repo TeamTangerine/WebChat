@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebChat.Models
+﻿namespace WebChat.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class Notification
     {
         [Key]

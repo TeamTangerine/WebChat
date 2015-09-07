@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace WebChat.Models
+﻿namespace WebChat.Models
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
     public class Message
     {
         [Key]
@@ -24,6 +23,5 @@ namespace WebChat.Models
         public string ReceiverId { get; set; }
 
         public virtual ApplicationUser Receiver { get; set; }
-
     }
 }

@@ -1,24 +1,28 @@
-﻿using System.Linq;
-using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using WebChat.Services.Models.ViewModels;
-
-namespace WebChat.Services.Controllers
+﻿namespace WebChat.Services.Controllers
 {
+    using System.Linq;
+    using System.Web.Http;
+
+    using Microsoft.AspNet.Identity;
+
+    using WebChat.Services.Models.ViewModels;
+
     [Authorize]
     public class NotificationsController : BaseApiController
     {
-        //GET /api/notifications
+        // GET /api/notifications
         [HttpGet]
         [Route("api/notifications")]
         public IHttpActionResult GetAllNotifications()
         {
-            var userId = User.Identity.GetUserId();
+            var userId = this.User.Identity.GetUserId();
 
-            if (!Data.Notifications.Any(n => n.ReceiverId == userId))
-                return Ok("No new notifications.");
+            if (!this.Data.Notifications.Any(n => n.ReceiverId == userId))
+            {
+                return this.Ok("No new notifications.");
+            }
 
-            var notifications = Data.Notifications
+            var notifications = this.Data.Notifications
                 .Where(n => n.ReceiverId == userId)
                 .Select(n => new NotificationsViewModel
                 {
@@ -26,28 +30,31 @@ namespace WebChat.Services.Controllers
                     NotificationsAmount = n.Amount
                 });
 
-            return Ok(notifications);
+            return this.Ok(notifications);
         }
 
-        //GET /api/notifications/{friendId}
+        // GET /api/notifications/{friendId}
         [HttpGet]
         [Route("api/notifications/{userId}")]
         public IHttpActionResult GetNotificationsForUser(string friendId)
         {
-            var userId = User.Identity.GetUserId();
+            var userId = this.User.Identity.GetUserId();
 
-            if (!Data.Notifications.Any(n => n.ReceiverId == userId && n.SenderId == friendId))
-                return Ok("No new notifications.");
+            if (!this.Data.Notifications.Any(n => n.ReceiverId == userId && n.SenderId == friendId))
+            {
+                return this.Ok("No new notifications.");
+            }
 
-            var notifications = Data.Notifications
-                .Where(n => n.SenderId == friendId && n.ReceiverId == userId).
-                Select(n => new NotificationsViewModel
+            var notifications =
+                this.Data.Notifications
+                .Where(n => n.SenderId == friendId && n.ReceiverId == userId)
+                .Select(n => new NotificationsViewModel
                 {
-                    SenderName = n.Sender.UserName,
+                    SenderName = n.Sender.UserName, 
                     NotificationsAmount = n.Amount
                 });
 
-            return Ok(notifications);
+            return this.Ok(notifications);
         }
     }
 }

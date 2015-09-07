@@ -1,11 +1,11 @@
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using Microsoft.AspNet.Identity.EntityFramework;
-using WebChat.Data.Migrations;
-using WebChat.Models;
-
 namespace WebChat.Data
 {
+    using System.Data.Entity;
+    using System.Data.Entity.ModelConfiguration.Conventions;
+    using Microsoft.AspNet.Identity.EntityFramework;
+    using WebChat.Data.Migrations;
+    using WebChat.Models;
+
     public class WebChatContext : IdentityDbContext<ApplicationUser>
     {
         public WebChatContext()
