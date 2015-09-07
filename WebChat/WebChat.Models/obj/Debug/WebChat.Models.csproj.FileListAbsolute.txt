@@ -11,4 +11,3 @@ C:\Users\ufree\Desktop\WebChat\WebChat\WebChat\WebChat.Models\bin\Debug\Microsof
 C:\Users\ufree\Desktop\WebChat\WebChat\WebChat\WebChat.Models\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\Users\ufree\Desktop\WebChat\WebChat\WebChat\WebChat.Models\obj\Debug\WebChat.Models.dll
 C:\Users\ufree\Desktop\WebChat\WebChat\WebChat\WebChat.Models\obj\Debug\WebChat.Models.pdb
-C:\Users\ufree\Desktop\WebChat\WebChat\WebChat\WebChat.Models\obj\Debug\WebChat.Models.csprojResolveAssemblyReference.cache

@@ -1,15 +1,13 @@
 ﻿using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using WebChat.Models;
-using WebChat.Services.Models.BindingModels;
 using WebChat.Services.Models.ViewModels;
 
 namespace WebChat.Services.Controllers
 {
     [Authorize]
     public class NotificationsController : BaseApiController
-    { 
+    {
         //GET /api/notifications
         [HttpGet]
         [Route("api/notifications")]
@@ -17,18 +15,18 @@ namespace WebChat.Services.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            if (!this.Data.Notifications.Any(n => n.ReceiverId == userId))
-                return this.Ok("No new notifications.");
+            if (!Data.Notifications.Any(n => n.ReceiverId == userId))
+                return Ok("No new notifications.");
 
-            var notifications = this.Data.Notifications
+            var notifications = Data.Notifications
                 .Where(n => n.ReceiverId == userId)
-                .Select(n =>  new NotificationsViewModel
+                .Select(n => new NotificationsViewModel
                 {
                     SenderName = n.Sender.UserName,
                     NotificationsAmount = n.Amount
                 });
 
-            return this.Ok(notifications);
+            return Ok(notifications);
         }
 
         //GET /api/notifications/{friendId}
@@ -38,10 +36,10 @@ namespace WebChat.Services.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            if (!this.Data.Notifications.Any(n => n.ReceiverId == userId && n.SenderId == friendId))
-                return this.Ok("No new notifications.");
+            if (!Data.Notifications.Any(n => n.ReceiverId == userId && n.SenderId == friendId))
+                return Ok("No new notifications.");
 
-            var notifications = this.Data.Notifications
+            var notifications = Data.Notifications
                 .Where(n => n.SenderId == friendId && n.ReceiverId == userId).
                 Select(n => new NotificationsViewModel
                 {
@@ -49,8 +47,7 @@ namespace WebChat.Services.Controllers
                     NotificationsAmount = n.Amount
                 });
 
-            return this.Ok(notifications);
+            return Ok(notifications);
         }
-
     }
 }

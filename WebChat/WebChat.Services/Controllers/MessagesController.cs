@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using Microsoft.SqlServer.Server;
 using WebChat.Models;
 using WebChat.Services.Models.BindingModels;
 using WebChat.Services.Models.ViewModels;
@@ -23,11 +22,11 @@ namespace WebChat.Services.Controllers
             var userId = User.Identity.GetUserId();
 
             //It returns "ok" because it's not an actual error.
-            if (!this.Data.Messages.Any(m => m.Sender.Id == friendId && m.Receiver.Id == userId))
-                return this.Ok("No messages..");
+            if (!Data.Messages.Any(m => m.Sender.Id == friendId && m.Receiver.Id == userId))
+                return Ok("No messages..");
 
             if (friendId == userId)
-                return this.BadRequest("You canot have conversation with yourself!");
+                return BadRequest("You canot have conversation with yourself!");
 
             var messages = Data.Messages
                 .Where(m => m.Sender.Id == friendId && m.Receiver.Id == userId)
@@ -39,12 +38,12 @@ namespace WebChat.Services.Controllers
                     SentOn = m.SentOn
                 });
 
-           var notification = this.Data.Notifications
+            var notification = Data.Notifications
                 .First(n => n.SenderId == userId && n.ReceiverId == friendId);
 
             notification.Amount = 0;
 
-            this.Data.SaveChanges();
+            Data.SaveChanges();
 
             return Ok(messages);
         }
@@ -52,23 +51,23 @@ namespace WebChat.Services.Controllers
         //POST /api/messasges/{frienId}
         [HttpPost]
         [Route("api/messages/{friendId}")]
-        public IHttpActionResult PostMessages(string friendId, [FromBody]MessageBindingModel message)
+        public IHttpActionResult PostMessages(string friendId, [FromBody] MessageBindingModel message)
         {
             var userId = User.Identity.GetUserId();
 
             if (friendId == userId)
-                return this.BadRequest("You canot send messages to yourself!");
+                return BadRequest("You canot send messages to yourself!");
 
             if (!ModelState.IsValid)
-                return this.BadRequest(ModelState);
+                return BadRequest(ModelState);
 
             //This can be removed later on if we implement the validation in the front-end.
             if (message.Message.Length == 0)
-                return this.BadRequest("Message cannot be empty!");
+                return BadRequest("Message cannot be empty!");
 
-            if (!this.Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
+            if (!Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
             {
-                this.Data.Notifications.Add(new Notification
+                Data.Notifications.Add(new Notification
                 {
                     SenderId = userId,
                     ReceiverId = friendId,
@@ -76,7 +75,7 @@ namespace WebChat.Services.Controllers
                 });
             }
 
-            this.Data.Messages.Add(new Message
+            Data.Messages.Add(new Message
             {
                 MessageString = message.Message,
                 SentOn = DateTime.Now,
@@ -84,14 +83,14 @@ namespace WebChat.Services.Controllers
                 ReceiverId = friendId
             });
 
-            var notification = this.Data.Notifications
+            var notification = Data.Notifications
                 .First(n => n.SenderId == userId && n.ReceiverId == friendId);
 
             notification.Amount++;
 
-            this.Data.SaveChanges();
+            Data.SaveChanges();
 
-            return this.Ok("Message sent successfully.");
+            return Ok("Message sent successfully.");
         }
 
         //POST /api/messages/{friendId}/image
@@ -102,14 +101,14 @@ namespace WebChat.Services.Controllers
             var userId = User.Identity.GetUserId();
 
             if (friendId == userId)
-                return this.BadRequest("You canot send images to yourself!");
+                return BadRequest("You canot send images to yourself!");
 
             if (!ModelState.IsValid)
-                return this.BadRequest(ModelState);
+                return BadRequest(ModelState);
 
-            if (!this.Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
+            if (!Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
             {
-                this.Data.Notifications.Add(new Notification
+                Data.Notifications.Add(new Notification
                 {
                     SenderId = userId,
                     ReceiverId = friendId,
@@ -117,18 +116,18 @@ namespace WebChat.Services.Controllers
                 });
             }
 
-            string imageBase64 = "";
-           
-            using (MemoryStream m = new MemoryStream())
+            var imageBase64 = "";
+
+            using (var m = new MemoryStream())
             {
                 img.Save(m, img.RawFormat);
-                byte[] imageBytes = m.ToArray();
+                var imageBytes = m.ToArray();
 
                 // Convert byte[] to Base64 String
                 imageBase64 = Convert.ToBase64String(imageBytes);
             }
-            
-            this.Data.Messages.Add(new Message
+
+            Data.Messages.Add(new Message
             {
                 MessageString = imageBase64,
                 SentOn = DateTime.Now,
@@ -136,16 +135,14 @@ namespace WebChat.Services.Controllers
                 ReceiverId = friendId
             });
 
-            var notification = this.Data.Notifications
+            var notification = Data.Notifications
                 .First(n => n.SenderId == userId && n.ReceiverId == friendId);
 
             notification.Amount++;
 
-            this.Data.SaveChanges();
+            Data.SaveChanges();
 
-            return this.Ok("Image sent successfully.");
-
+            return Ok("Image sent successfully.");
         }
-
     }
 }
