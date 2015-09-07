@@ -10,7 +10,12 @@ namespace FileUploads
 {
     public class UploadController : ApiController
     {
-        [Route("upload")]
+        [Route("upload")] //uploads to disc
+        //Physically creates a file on the server and then exposes the stream representing the file for the developer to process further. Additionally,
+        //MultipartFormDataStreamProvider will look for the filename in a Content-Disposition header. If this header is not
+        //present, it will not write to the disk directly (will not use FileStream), but will instead expose the uploaded file as a
+        //MemoryStream only. MultipartMemoryStreamProvider will always load the contents of the uploaded file into a MemoryStream.
+
         public async Task Post()
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -20,7 +25,12 @@ namespace FileUploads
             await Request.Content.ReadAsMultipartAsync(streamProvider);
         }
 
-        [Route("uploadToMemory")]
+        [Route("uploadToMemory")]// uploads directly to the memory e.g. cloud
+
+        //The code to accept a file upload directly into memory appart from the validation is very similar, except the fact that once the file is
+        //loaded into a MemoryStream, it’s up to the developer to handle it further. For example, you may wish to save the
+        //Stream to a database or upload it to the cloud.
+
         public async Task<List<string>> PostToMemory()
         {
             if (!Request.Content.IsMimeMultipartContent())

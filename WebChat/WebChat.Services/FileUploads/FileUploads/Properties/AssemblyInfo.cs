@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Apress.Recipes.WebApi")]
+[assembly: AssemblyTitle("WebApi")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Apress.Recipes.WebApi")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("WebApi")]
+[assembly: AssemblyCopyright("2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
