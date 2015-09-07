@@ -4,6 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
+//Validation
+//Gives the option to deny the upload if the extension doesn’t match the requirements of your application.
+
 namespace FileUploads
 {
     public class ValidatedMemoryStreamProvider : MultipartMemoryStreamProvider

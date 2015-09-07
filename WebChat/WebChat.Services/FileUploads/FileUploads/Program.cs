@@ -14,6 +14,7 @@ namespace FileUploads
             var address = "http://localhost:9000/";
             var files = new[]
             {
+                //In self-hosted scenarios, the easiest way to determine current location is to grab it off the current Assembly
                 Path.Combine(Assembly.GetExecutingAssembly().Location, @"..\..\..\textfile.txt"),
                 Path.Combine(Assembly.GetExecutingAssembly().Location, @"..\..\..\evilfile.bat")
             };
