@@ -1,10 +1,13 @@
-﻿namespace WebChat.Services.Models.BindingModels
-{
-    using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Security.AccessControl;
 
+namespace WebChat.Services.Models.BindingModels
+{
     public class MessageBindingModel
     {
         [Required]
-        public string Message { get; set; }
+        [MinLength(1)]
+        public string ContentString { get; set; }
     }
 }

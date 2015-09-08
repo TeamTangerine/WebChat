@@ -6,7 +6,9 @@ namespace WebChat.Services.Models.ViewModels
     {
         public string SenderId { get; set; }
 
-        public string Message { get; set; }
+        public string ContentString { get; set; }
+
+        public string ContentType { get; set; }
 
         public DateTime SentOn { get; set; }
     }

@@ -9,7 +9,10 @@
         public int Id { get; set; }
 
         [Required]
-        public string MessageString { get; set; }
+        public string ContentString { get; set; }
+
+        [Required]
+        public string ContentType { get; set; }
 
         [Required]
         public DateTime SentOn { get; set; }
@@ -23,5 +26,6 @@
         public string ReceiverId { get; set; }
 
         public virtual ApplicationUser Receiver { get; set; }
+
     }
 }
