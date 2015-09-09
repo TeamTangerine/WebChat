@@ -43,7 +43,7 @@ namespace WebChat.Services.Controllers
             private set { _userManager = value; }
         }
 
-        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; }//set??
+        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; set; }
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
@@ -97,7 +97,7 @@ namespace WebChat.Services.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser {UserName = model.UserName};
+            var user = new ApplicationUser {UserName = model.UserName, Email = model.Email};
 
             var result = await UserManager.CreateAsync(user, model.Password);
 
