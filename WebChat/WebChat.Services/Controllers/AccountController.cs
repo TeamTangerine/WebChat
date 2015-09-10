@@ -97,10 +97,12 @@ namespace WebChat.Services.Controllers
         [Route("Search")]
         public IHttpActionResult SearchUserByName([FromUri] string searchTerm)
         {
-            string searchName = searchTerm.ToUpper();
+            string searchQuery = "";
+            if(searchTerm!=null)
+                searchQuery = searchTerm.ToUpper();
 
             var users = this.Data.Users
-                .Where(u => u.UserName.ToUpper().Contains(searchName))
+                .Where(u => u.UserName.ToUpper().Contains(searchQuery) || u.Email.ToUpper().Contains(searchQuery))
                 .ToList()
                 .Select(u => UserViewModel.GetUserViewModel(u));
 
