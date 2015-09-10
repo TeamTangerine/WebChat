@@ -8,7 +8,7 @@
         public int Id { get; set; }
 
         [Required]
-        public int Amount { get; set; }
+        public int UnseenMessages { get; set; }
 
         [Required]
         public string SenderId { get; set; }

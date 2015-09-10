@@ -24,24 +24,34 @@ namespace WebChat.Services.Controllers
             if (friendId == userId)
                 return BadRequest("You canot have conversation with yourself!");
 
+            if (!Data.Users.Any(u => u.Id == friendId))
+            {
+                return BadRequest("You cannot have conversation with an unexisting user!");
+            }
+
+
             var messages = Data.Messages
-                .Where(m => m.Sender.Id == friendId && m.Receiver.Id == userId)
+                .Where(m => m.SenderId == friendId && m.ReceiverId == userId || m.SenderId == userId && m.ReceiverId == friendId)
                 .OrderBy(m => m.SentOn)
                 .Select(m => new MessageViewModel
                 {
                     SenderId = m.SenderId,
+                    SenderUserName = m.Sender.UserName,
+                    RecieverId = m.ReceiverId,
+                    RecieverUserName = m.Receiver.UserName,
                     ContentString = m.ContentString,
                     ContentType = m.ContentType,
                     SentOn = m.SentOn
                 });
 
-            var notification = Data.Notifications
-                .First(n => n.SenderId == userId && n.ReceiverId == friendId);
-
-            notification.Amount = 0;
-
-            Data.SaveChanges();
-
+            if (messages.Any())
+            {
+                var notification = Data.Notifications
+                    .First(n => n.SenderId == userId && n.ReceiverId == friendId);
+                notification.UnseenMessages = 0;
+                Data.SaveChanges();
+            }
+            
             return Ok(messages);
         }
 
@@ -55,18 +65,13 @@ namespace WebChat.Services.Controllers
             if (friendId == userId)
                 return BadRequest("You canot send messages to yourself!");
 
+            if (!Data.Users.Any(u => u.Id == friendId))
+            {
+                return BadRequest("You cannot sent message to an unexisting user!");
+            }
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            if (!Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
-            {
-                Data.Notifications.Add(new Notification
-                {
-                    SenderId = userId,
-                    ReceiverId = friendId,
-                    Amount = 0
-                });
-            }
 
             Data.Messages.Add(new Message
             {
@@ -77,10 +82,22 @@ namespace WebChat.Services.Controllers
                 ReceiverId = friendId
             });
 
+            if (!Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
+            {
+                Data.Notifications.Add(new Notification
+                {
+                    SenderId = userId,
+                    ReceiverId = friendId,
+                    UnseenMessages = 0
+                });
+
+                Data.SaveChanges();
+            }
+
             var notification = Data.Notifications
                 .First(n => n.SenderId == userId && n.ReceiverId == friendId);
 
-            notification.Amount++;
+            notification.UnseenMessages++;
 
             Data.SaveChanges();
 
@@ -95,20 +112,15 @@ namespace WebChat.Services.Controllers
             var userId = User.Identity.GetUserId();
 
             if (friendId == userId)
-                return BadRequest("You canot send images to yourself!");
+                return BadRequest("You canot send image to yourself!");
+
+            if (!Data.Users.Any(u => u.Id == friendId))
+            {
+                return BadRequest("You can not sent image to an unexisting user!");
+            }
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            if (!Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
-            {
-                Data.Notifications.Add(new Notification
-                {
-                    SenderId = userId,
-                    ReceiverId = friendId,
-                    Amount = 0
-                });
-            }
 
             var imageBase64 = "";
 
@@ -130,10 +142,21 @@ namespace WebChat.Services.Controllers
                 ReceiverId = friendId
             });
 
+
+            if (!Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
+            {
+                Data.Notifications.Add(new Notification
+                {
+                    SenderId = userId,
+                    ReceiverId = friendId,
+                    UnseenMessages = 0
+                });
+            }
+
             var notification = Data.Notifications
                 .First(n => n.SenderId == userId && n.ReceiverId == friendId);
 
-            notification.Amount++;
+            notification.UnseenMessages++;
 
             Data.SaveChanges();
 

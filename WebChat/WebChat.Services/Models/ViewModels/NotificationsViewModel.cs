@@ -4,6 +4,6 @@
     {
         public string SenderName { get; set; }
 
-        public int NotificationsAmount { get; set; }
+        public int UnseenMessages { get; set; }
     }
 }

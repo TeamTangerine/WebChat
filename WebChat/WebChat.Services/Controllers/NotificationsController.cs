@@ -27,7 +27,7 @@
                 .Select(n => new NotificationsViewModel
                 {
                     SenderName = n.Sender.UserName,
-                    NotificationsAmount = n.Amount
+                    UnseenMessages = n.UnseenMessages
                 });
 
             return this.Ok(notifications);
@@ -35,15 +35,10 @@
 
         // GET /api/notifications/{friendId}
         [HttpGet]
-        [Route("api/notifications/{userId}")]
+        [Route("api/notifications/{friendId}")]
         public IHttpActionResult GetNotificationsForUser(string friendId)
         {
             var userId = this.User.Identity.GetUserId();
-
-            if (!this.Data.Notifications.Any(n => n.ReceiverId == userId && n.SenderId == friendId))
-            {
-                return this.Ok("No new notifications.");
-            }
 
             var notifications =
                 this.Data.Notifications
@@ -51,7 +46,7 @@
                 .Select(n => new NotificationsViewModel
                 {
                     SenderName = n.Sender.UserName, 
-                    NotificationsAmount = n.Amount
+                    UnseenMessages = n.UnseenMessages
                 });
 
             return this.Ok(notifications);
