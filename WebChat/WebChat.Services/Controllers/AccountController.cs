@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -14,6 +15,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using WebChat.Models;
 using WebChat.Services.Models;
+using WebChat.Services.Models.ViewModels;
 using WebChat.Services.Providers;
 using WebChat.Services.Results;
 
@@ -44,20 +46,6 @@ namespace WebChat.Services.Controllers
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; set; }
-        // GET api/Account/UserInfo
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo()
-        {
-            var externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
-            return new UserInfoViewModel
-            {
-                Email = User.Identity.GetUserName(),
-                HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
-            };
-        }
 
         // POST api/Account/Logout
         [Route("Logout")]
@@ -102,6 +90,21 @@ namespace WebChat.Services.Controllers
             var result = await UserManager.CreateAsync(user, model.Password);
 
             return !result.Succeeded ? GetErrorResult(result) : Ok();
+        }
+
+        // Get api/Account/Search?searchTerm ={name}
+        [HttpGet]
+        [Route("Search")]
+        public IHttpActionResult SearchUserByName([FromUri] string searchTerm)
+        {
+            string searchName = searchTerm.ToUpper();
+
+            var users = this.Data.Users
+                .Where(u => u.UserName.ToUpper().Contains(searchName))
+                .ToList()
+                .Select(u => UserViewModel.GetUserViewModel(u));
+
+            return this.Ok(users);
         }
 
         protected override void Dispose(bool disposing)
