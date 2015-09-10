@@ -11,7 +11,7 @@ namespace FileUploads
     {
         static void Main()
         {
-            var address = "http://localhost:9000/";
+            var address = "http://localhost:9000/"; //to be updated
             var files = new[]
             {
                 //In self-hosted scenarios, the easiest way to determine current location is to grab it off the current Assembly
@@ -54,7 +54,7 @@ namespace FileUploads
             {
                 var filestream = new FileStream(files[i], FileMode.Open);
                 var fileName = System.IO.Path.GetFileName(files[i]);
-                content.Add(new StreamContent(filestream), "file"+i, fileName);   
+                content.Add(new StreamContent(filestream), "file" + i, fileName);
             }
 
             return content;

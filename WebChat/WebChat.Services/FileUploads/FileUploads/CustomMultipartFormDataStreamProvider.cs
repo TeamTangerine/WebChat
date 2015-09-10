@@ -17,7 +17,7 @@ namespace FileUploads
         public override string GetLocalFileName(HttpContentHeaders headers)
         {
             var filename = headers.ContentDisposition.FileName.Replace("\"", string.Empty);
-            if (filename.IndexOf('.') < 0)	
+            if (filename.IndexOf('.') < 0)
                 throw new Exception("No extension");
 
             var extension = filename.Split('.').Last();
