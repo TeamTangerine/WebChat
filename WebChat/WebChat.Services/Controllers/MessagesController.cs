@@ -73,14 +73,16 @@ namespace WebChat.Services.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            Data.Messages.Add(new Message
+            var newMessage = new Message
             {
                 ContentString = message.ContentString,
                 ContentType = "text",
                 SentOn = DateTime.Now,
                 SenderId = userId,
                 ReceiverId = friendId
-            });
+            };
+
+            Data.Messages.Add(newMessage);
 
             if (!Data.Notifications.Any(n => n.SenderId == userId && n.ReceiverId == friendId))
             {
@@ -101,7 +103,7 @@ namespace WebChat.Services.Controllers
 
             Data.SaveChanges();
 
-            return Ok("Message sent successfully.");
+            return Ok(newMessage);
         }
 
         //POST /api/messages/{friendId}/image

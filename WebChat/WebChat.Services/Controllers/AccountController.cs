@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -92,7 +93,54 @@ namespace WebChat.Services.Controllers
             return !result.Succeeded ? GetErrorResult(result) : Ok();
         }
 
-        // Get api/Account/Search?searchTerm ={name}
+        // POST api/account/login
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("login")]
+        public async Task<HttpResponseMessage> LoginUser(LoginUserBindingModel model)
+        {
+            var request = HttpContext.Current.Request;
+            var tokenServiceUrl = request.Url.GetLeftPart(UriPartial.Authority) + request.ApplicationPath + "/Token";
+            using (var client = new HttpClient())
+            {
+                var requestParams = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("grant_type", "password"),
+                    new KeyValuePair<string, string>("username", model.UserName),
+                    new KeyValuePair<string, string>("password", model.Password)
+                };
+
+                var requestParamsFormUrlEncoded = new FormUrlEncodedContent(requestParams);
+                var tokenServiceResponse = await client.PostAsync(tokenServiceUrl, requestParamsFormUrlEncoded);
+                var responseString = await tokenServiceResponse.Content.ReadAsStringAsync();
+                var responseCode = tokenServiceResponse.StatusCode;
+
+                var responseMsg = new HttpResponseMessage(responseCode)
+                {
+                    Content = new StringContent(responseString, Encoding.UTF8, "application/json")
+                };
+
+                return responseMsg;
+            }
+        }
+
+        // GET api/Account/info
+        [HttpGet]
+        [Authorize]
+        [Route("Info")]
+        public IHttpActionResult GetUserInformation()
+        {
+            var userId = User.Identity.GetUserId();
+            
+            var user = this.Data.Users
+                .Where(u => u.Id == userId)
+                .ToList()
+                .Select(u => UserViewModel.GetUserViewModel(u));
+
+            return this.Ok(user);
+        }
+
+        // GET api/Account/Search?searchTerm ={name}
         [HttpGet]
         [Route("Search")]
         public IHttpActionResult SearchUserByName([FromUri] string searchTerm)
